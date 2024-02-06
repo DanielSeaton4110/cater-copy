@@ -1,0 +1,308 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<!-- Wrap your content in a div with an id for easy access -->
+<div id="content">
+  <ul>
+    <li>{{ customer_name }} {{ delivery_selection }} {{ pickup_location_selection }} {% if total_chafers %}
+      w/ Chafers
+  {% endif %} {% if full_service_fee > 0 %} Full Service{% endif %}</li>
+    <li>{{ order_date }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Arrival: {{ full_time }}</li>
+
+    <p style="margin-bottom: 5px";>Address: {{ customer_address }}</p>
+
+    <li>Contact #: {{ contact_phone }}</li>
+
+    <p style="margin-bottom: 1px;">Serving {{ serving_for }}</p>
+    {% if pnss_selection %}
+    <p style="margin-bottom: 1px; font-size: 11px; font-style: italic; color: #800000;">No PNSS</p>
+  {% else %}
+  <p style="font-size: 11px; font-style: italic; color: #800000;">Providing quality disposable plates, napkins, silverware, serving utensils</p>
+  {% endif %}
+</ul>
+
+
+
+
+
+  {% if appetizers_data %}
+  <h2>~Appetizers~</h2>
+  <ul>
+    {% set flautitas_ordered = [] %}
+    {% set salad_ordered = [] %}
+    {% for appetizer, quantity in appetizers_data.items() %}
+      {% if 'Flautitas' in appetizer %}
+        {% set flautitas_name = appetizer.split(' for')[0] %}
+        {% set _ = flautitas_ordered.append({'name': flautitas_name, 'quantity': quantity}) %}
+      {% elif appetizer == 'Hand Tossed Salad' %}
+        {% set _ = salad_ordered.append({'name': appetizer, 'quantity': quantity}) %}
+      {% else %}
+        <li>{{ appetizer }} for {{ quantity }}... {{ "%.2f"|format(quantity * appetizer_prices[appetizer]) }}</li>
+      {% endif %}
+    {% endfor %}
+    {% for flautitas in flautitas_ordered %}
+      <li>{{ flautitas['name'] }} for {{ flautitas['quantity'] }}... {{ "%.2f"|format(flautitas['quantity'] * appetizer_prices[flautitas['name']]) }}</li>
+    {% endfor %}
+    <!-- Print the crema line directly after all Flautitas selections -->
+    {% if flautitas_ordered %}
+      <p style="font-size: 11px; font-style: italic; color: #800000;">
+        w/ garnishes of crema mexicana, salsa de aguacate, and queso cotija
+      </p>
+    {% endif %}
+    {% for salad in salad_ordered %}
+      <li>{{ salad['name'] }} for {{ salad['quantity'] }}... {{ "%.2f"|format(salad['quantity'] * appetizer_prices[salad['name']]) }}</li>
+      <!-- Print the salad line directly under Hand Tossed Salad -->
+      <p style="font-size: 11px; font-style: italic; color: #800000;">
+        w/ dressing and cheese on the side
+      </p>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+
+
+
+{% if entrees_data or mole_data or specialty_chile_rellenos_data %}
+  <h2>~Entrees~</h2>
+  <p style="font-size: 11px; font-style: italic; color: #800000;">Entrees include chips, salsa, spanish rice, refried beans, and tortillas.</p>
+  <ul>
+    {% set fajitas_ordered = [] %}
+    {% set cochinitas_ordered = [] %}
+    {% set carnitas_ordered = [] %} <!-- Add a new list for Carnitas -->
+    {% for entree, quantity in entrees_data.items() %}
+      {% if 'Fajitas' in entree %}
+        {% set fajitas_name = entree.split(' for')[0] %}
+        {% set _ = fajitas_ordered.append({'name': fajitas_name, 'quantity': quantity}) %}
+      {% elif entree == 'Cochinitas Pibil' %}
+        {% set _ = cochinitas_ordered.append({'name': entree, 'quantity': quantity}) %}
+      {% elif entree == 'Succulent Pork Carnitas' %} <!-- Check for Carnitas -->
+        {% set _ = carnitas_ordered.append({'name': entree, 'quantity': quantity}) %}
+      {% else %}
+        <li>{{ entree }} for {{ quantity }}... {{ "%.2f"|format(quantity * entree_prices[entree]) }}</li>
+      {% endif %}
+    {% endfor %}
+  
+    {% for fajitas in fajitas_ordered %}
+      <li>{{ fajitas['name'] }} for {{ fajitas['quantity'] }}... {{ "%.2f"|format(fajitas['quantity'] * entree_prices[fajitas['name']]) }}</li>
+    {% endfor %}
+    <!-- Print the Fajitas line directly after all Fajitas selections -->
+    {% if fajitas_ordered %}
+      <p style="font-size: 11px; font-style: italic; color: #800000;">
+        Fajitas accompanied by guacamole, pico de gallo, sour cream, jalapeños, and queso cotija
+      </p>
+    {% endif %}
+  
+    {% for cochinitas in cochinitas_ordered %}
+      <li>{{ cochinitas['name'] }} for {{ cochinitas['quantity'] }}... {{ "%.2f"|format(cochinitas['quantity'] * entree_prices[cochinitas['name']]) }}</li>
+      <!-- Print the Cochinitas line directly after all Cochinitas Pibil selections -->
+      <p style="font-size: 11px; font-style: italic; color: #800000;">
+        w/ pickled red onions
+      </p>
+    {% endfor %}
+  
+    {% for carnitas in carnitas_ordered %}
+      <li>{{ carnitas['name'] }} for {{ carnitas['quantity'] }}... {{ "%.2f"|format(carnitas['quantity'] * entree_prices[carnitas['name']]) }}</li>
+      <!-- You can add a similar line for Carnitas details if needed -->
+      <p style="font-size: 11px; font-style: italic; color: #800000;">
+        Accompanied by garnishes of pico de gallo, salsa de aguacate, sliced jalapeños
+      </p>
+    {% endfor %}
+  
+    {% for mole_flavor, quantity in mole_data.items() %}
+      {% set mole_info = mole_flavor.split(' (', 1) %}
+      {% set mole_name = mole_info[0] %}
+      {% set protein_choice = mole_info[1][:-1] if mole_info|length > 1 else '' %}
+      {% set price = quantity * mole_prices[mole_name.strip()] %}
+      <li>{{ mole_name }} {% if protein_choice %}{{ protein_choice }}{% endif %} for {{ quantity }}... {{ "%.2f"|format(price) }}</li>
+    {% endfor %}
+
+    <!-- Iterate through the specialty_chile_rellenos_data dictionary to display specialty chiles -->
+    {% for chile, quantity in specialty_chile_rellenos_data.items() %}
+      <li>{{ chile }} for {{ quantity }}... {{ "%.2f"|format(quantity * 16.99) }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+
+
+  {% if a_la_carte_data or tamales_data %}
+  <h2>~A la Carte~</h2>
+  <ul>
+    {% set a_la_carte_total = 0 %}
+
+    {% for enchilada, quantity in a_la_carte_data.items() %}
+      {% set price = quantity * a_la_carte_prices[enchilada] %}
+      <li>{{ quantity }} {{ enchilada }}... {{ "%.2f"|format(price) }}</li>
+      {% set a_la_carte_total = a_la_carte_total + price %}
+    {% endfor %}
+
+    {% for tamales_item in tamales_data %}
+    {% if tamales_item.quantity > 0 %}
+      {% set tamales_price = 7.25 if tamales_item.mole_flavor != 'None' else 5.50 %}
+      {% set tamales_item_total = tamales_price * tamales_item.quantity %}
+      <li>
+        {{ tamales_item.quantity }} {{ tamales_item.protein_choice }} Tamales
+        {% if tamales_item.mole_flavor != 'None' %}
+          with {{ tamales_item.mole_flavor }}
+        {% endif %}
+        {% if tamales_item.sauce_on_side %}
+          on side
+        {% endif %}
+        ${{ "%.2f"|format(tamales_item_total) }}
+      </li>
+      {% set a_la_carte_total = a_la_carte_total + tamales_item_total %}
+    {% endif %}
+  {% endfor %}
+
+  {% if a_la_carte_total > 0 %}
+    <li><strong>Tamales Total: ${{ "%.2f"|format(a_la_carte_total) }}</strong></li>
+  {% endif %}
+</ul>
+{% endif %}
+
+
+
+
+{% if dessert_data %}
+  <h2>~Desserts~</h2>
+  <ul>
+    {% for dessert, quantity in dessert_data.items() %}
+      {% set price = quantity * dessert_prices[dessert] %}
+      <li>
+        {% if dessert == 'Dozen Cookies' %}
+          {{ quantity }} {{ dessert }}... {{ "%.2f"|format(price) }}
+        {% else %}
+          {{ quantity }} ea. {{ dessert }}... {{ "%.2f"|format(price) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+{% if drink_data %}
+  <h2>~Drinks~</h2>
+  <ul>
+    {% for drink, quantity in drink_data.items() %}
+      {% set price = quantity * drink_prices[drink] %}
+      <li>
+        {{ quantity }} {{ drink }}... {{ "%.2f"|format(price) }}
+        {% if quantity > 1 and drink in ['Pints Margarita Mix', '1/2 Gallons Margarita Mix', 'Gallons Margarita Mix'] %}
+          <p style="font-size: 11px; font-style: italic; color: #800000;">
+            w/ salt and lime wedges ({{ quantity }})
+          </p>
+        {% elif drink in ['Pints Margarita Mix', '1/2 Gallons Margarita Mix', 'Gallons Margarita Mix'] %}
+          <p style="font-size: 11px; font-style: italic; color: #800000;">
+            w/ salt and lime wedges
+          </p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+  {% if sides_data %}
+  <h2>~Sides~</h2>
+  <ul>
+    {% for side, quantity in sides_data.items() %}
+      {% set price = quantity * sides_prices[side] %}
+      <li> {{ side }} for {{ quantity }}... {{ "%.2f"|format(price) }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+{% if pints_quarts_data or chafers_data %}
+  <h2>~Extras~</h2>
+  <ul>
+    {% if pints_quarts_data %}
+      {% for item_id, item_data in pints_quarts_data.items() %}
+        <li>
+          {{ item_data['pints_quarts_quantity'] }}
+          {% if item_data['pints_quarts_quantity'] == 1 %}
+            {{ item_data['pints_quarts_choice']|replace('-', ' ')|replace('s', '') }}
+          {% else %}
+            {{ item_data['pints_quarts_choice']|replace('-', ' ') }}
+          {% endif %}
+          {{ item_data['pints_quarts_mole_flavor'] }}... {{ "%.2f"|format(pints_quarts_prices[item_data['pints_quarts_choice']][item_data['pints_quarts_mole_flavor']]* item_data['pints_quarts_quantity']) }}
+        </li>
+        
+        {# Debug Statement for Pints and Quarts #}
+        {% set item_total = pints_quarts_prices[item_data['pints_quarts_choice']][item_data['pints_quarts_mole_flavor']] * item_data['pints_quarts_quantity'] %}
+      {% endfor %}
+    {% endif %}
+
+    {% if chafers_data %}
+      {% for chafer, quantity in chafers_data.items() %}
+        {% set price = quantity * chafers_prices[chafer] %}
+        <li> {{ quantity }} {{ chafer }}... {{ "%.2f"|format(price) }}</li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+{% endif %}
+
+
+<!-- Calculate the Food Total by subtracting fees from combined_total -->
+{% set food_total = combined_total - full_service_fee - mileage_fee - packaging_handling_fee %}
+
+<!-- Add Food Total to the document if there are additional fees -->
+{% if mileage_fee or full_service_fee or packaging_handling_fee_percentage > 0 %}
+    <p>Food Total: {{ "%.2f"|format(food_total) }}</p>
+{% endif %}
+
+
+
+<!-- Check if Full Service is selected and display the Full Service Fee -->
+{% if full_service_fee is defined and full_service_fee > 0 %}
+    <p>37% Full Service Fee: {{ "%.2f"|format(full_service_fee) }}</p>
+{% endif %}
+
+<!-- Display Packaging & Handling Fee if a percentage is provided -->
+{% if packaging_handling_fee_percentage > 0 %}
+    {{ "%3.0f"|format(packaging_handling_fee_percentage) }}% Packaging and Handling Fee: {{ "%.2f"|format(packaging_handling_fee) }}
+{% endif %}
+
+<!-- Display Mileage Fee if provided -->
+<p>{% if mileage_fee > 0 %}
+    ${{ "%.3f"|format(mileage_rate) }} Mileage Fee: {{ "%.2f"|format(mileage_fee) }}
+{% endif %}</p>
+<!-- Display the Subtotal -->
+<p>Subtotal: {{ "%.2f"|format(combined_total) }}</p>
+
+<!-- Display Tax Exempt status -->
+{% if is_tax_exempt %}
+    <p>Tax Exempt</p>
+{% endif %}
+
+
+<!-- Calculate and display Tax if not Tax Exempt -->
+{% if not is_tax_exempt %}
+    {% set tax_rate = 0.0875 %}
+    <!-- Calculate tax on the combined total including subtotal, Full Service fee, mileage fee, and packaging fee -->
+    {% set tax_amount = (subtotal + a_la_carte_total + full_service_fee + mileage_fee + packaging_handling_fee) * tax_rate %}
+    <p>Tax {{ (tax_rate * 100)|round(2) }}%: {{ "%.2f"|format(tax_amount) }}</p>
+{% endif %}
+
+<!-- Display the Total -->
+<p>Total: {{ "%.2f"|format(total_after_tax) }}</p>
+<!-- Display Gratuity Fee if a percentage is provided -->
+<p>{% if gratuity_fee_percentage > 0 %}
+    {{ "%3.0f"|format(gratuity_fee_percentage) }}% Gratuity Fee: {{ gratuity_fee_formatted }}
+{% endif %}</p>
+
+
+
+
+
+<p><img src="/static/RI Logo.png" alt="Logo" width="100" height="150"></p>
+<p>~Gracias! Provecho! Eat Red Iguana!~</p>
+<p>~Gratuities appreciated for driver attendant~</p>
+
+
+
+<a href="{{ url_for('download_success_docx') }}" download="success.docx" class="btn btn-info">Download Word Doc</a>
+
+
+{% endblock %}
+</div>

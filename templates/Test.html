@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML-Docx.js Test</title>
+  <script src="path/to/local/html-docx.js"></script>
+</head>
+<body>
+
+  <div id="test-content">
+    <p>This is a test paragraph.</p>
+  </div>
+
+  <button onclick="downloadTestDoc()">Download Word Doc</button>
+
+  <script>
+    function downloadTestDoc() {
+      var content = document.getElementById("test-content").innerHTML;
+      var converted = htmlDocx.asBlob(content);
+      saveAs(converted, 'test.docx');
+    }
+  </script>
+
+</body>
+</html>

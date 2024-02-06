@@ -1,0 +1,1079 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Catering Choices
+{% endblock %}
+
+{% block main%}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script>
+        // Wait for the document to be fully loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // Find the form element by its ID
+            const form = document.getElementById('your-form-id'); // Replace with your actual form ID
+
+            // Add a submit event listener to the form
+            form.addEventListener('submit', function (event) {
+                // Prevent the form from submitting immediately
+                event.preventDefault();
+
+                // Create a FormData object from the form
+                const formData = new FormData(form);
+
+                // Convert the FormData object to a plain JavaScript object
+                const formDataObject = {};
+                formData.forEach((value, key) => {
+                    formDataObject[key] = value;
+                });
+
+                // Log the form data to the browser console
+                console.log(formDataObject);
+
+                // Now, you can allow the form to submit (if needed)
+                // form.submit();
+            });
+        });
+    </script>
+
+<script>
+    function updateOrderSummary() {
+        const deliveryCheckbox = document.getElementById("delivery");
+        const pickupLocationDropdown = document.getElementById("pickup_location");
+        const chafersQuantity = parseInt(document.getElementById("chafers-quantity").value);
+        const halfChafersQuantity = parseInt(document.getElementById("half-chafers-quantity").value);
+        const deliverySelectionInput = document.getElementById("delivery_selection");
+        const pickupLocationSelectionInput = document.getElementById("pickup_location_selection");
+        const restaurantAddressInput = document.getElementById("customer_address"); // Use the customer_address input
+        const restaurantPhoneInput = document.getElementById("contact_phone"); // Add this line for contact phone
+
+
+
+        console.log("pickupLocationDropdown value:", pickupLocationDropdown.value);
+
+        // Check if the Delivery checkbox is checked
+        if (deliveryCheckbox.checked) {
+            deliverySelectionInput.value = "Delivery";
+        } else {
+            deliverySelectionInput.value = ""; // Clear the value if not selected
+        }
+
+        // Set the selected Pick Up Location
+        pickupLocationSelectionInput.value = pickupLocationDropdown.value;
+
+        // Check if chafers or half chafers are selected
+        if (chafersQuantity > 0 || halfChafersQuantity > 0) {
+            deliverySelectionInput.value += " w/ Chafers";
+        }
+
+                // Autofill the restaurant address and phone number based on the selected pickup location
+        if (pickupLocationDropdown.value === "Pick Up") {
+            restaurantAddressInput.value = "Red Iguana 2 866 W. South Temple SLC"; // Address for Red Iguana 2
+            restaurantPhoneInput.value = "8012146050"; // Phone number for Red Iguana 2
+        } else if (pickupLocationDropdown.value === "Pick Up out of #1") {
+            restaurantAddressInput.value = "Red Iguana 736 W. North Temple SLC"; // Address for Red Iguana 1
+            restaurantPhoneInput.value = "8013221489"; // Phone number for Red Iguana 1
+        } else {
+            restaurantAddressInput.value = "";
+            restaurantPhoneInput.value = ""; // Clear restaurant phone number if not autofilling
+        }
+
+
+        console.log("restaurantAddressInput value:", restaurantAddressInput.value);
+    }
+
+    // Add this script to your form page
+    document.addEventListener('DOMContentLoaded', function () {
+        const pickupLocationDropdown = document.getElementById('pickup_location');
+        const pickupLocationSelectionInput = document.getElementById('pickup_location_selection');
+        const deliveryCheckbox = document.getElementById('delivery');
+        const deliverySelectionInput = document.getElementById('delivery_selection');
+
+        // Set the selected option based on the stored value for Pick Up Location
+        const storedPickupValue = pickupLocationSelectionInput.value;
+        if (storedPickupValue) {
+            pickupLocationDropdown.value = storedPickupValue;
+        }
+
+        // Set the selected state for the Delivery checkbox
+        const storedDeliveryValue = deliverySelectionInput.value;
+        if (storedDeliveryValue === "Delivery") {
+            deliveryCheckbox.checked = true;
+        }
+
+        // Add an event listener to update the hidden inputs when the form elements change
+        pickupLocationDropdown.addEventListener('change', function () {
+            pickupLocationSelectionInput.value = pickupLocationDropdown.value;
+            updateOrderSummary(); // Call the function to update the address when pickup location changes
+        });
+
+        deliveryCheckbox.addEventListener('change', function () {
+            if (deliveryCheckbox.checked) {
+                deliverySelectionInput.value = "Delivery";
+            } else {
+                deliverySelectionInput.value = "";
+            }
+        });
+    });
+</script>
+
+
+
+
+    <title>Catering Choices</title>
+
+</head>
+<div class="centered-container">
+    <form action="/submit_order" method="POST">
+            <h2>~Order Information~</h2>
+            <div class="checkboxes">
+                <div class="checkbox">
+                    <label for="delivery">Delivery:</label>
+                    <input type="checkbox" id="delivery" name="delivery" onchange="updateOrderSummary()">
+                    <input type="hidden" id="delivery_selection" name="delivery_selection" value="">
+                </div>
+            <div class="checkbox">
+                <div class="input">
+                    <label for="mileage_fee">Mileage Fee:</label>
+                    <input type="number" id="mileage_fee" name="mileage_fee" min="0" step="0.1" style="width:100px;" placeholder="Enter miles" />
+                </div>
+            </div>
+                <div class="checkbox">
+                    <label for="pickup_location">Pick Up Location:</label>
+                    <select id="pickup_location" name="pickup_location" onchange="updateOrderSummary()">
+                        <option value="">Choose</option>
+                        <option value="Pick Up">#2</option>
+                        <option value="Pick Up out of #1">#1</option>
+                    </select>
+                    <input type="hidden" id="pickup_location_selection" name="pickup_location_selection" value="">
+                </div>
+                <div class="checkbox">
+                    <label for="full_service">Full Service:</label>
+                    <input type="checkbox" id="full_service" name="full_service">
+                </div>
+                <div class="checkbox">
+                    <label for="serving_for">Serving:</label>
+                    <input type="text" id="serving_for" name="serving_for">
+               </div>
+               <div class="checkbox">
+                <label for="pnss">No PNSS:</label>
+                <input type="checkbox" id="pnss" name="pnss" onchange="updateOrderSummary()">
+                <input type="hidden" id="pnss_selection" name="pnss_selection" value="">
+            </div>
+            </div>
+
+
+
+            <label for="customer_name">Name:</label>
+            <input type="text" id="customer_name" name="customer_name" required>
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="time">Time:</label>
+            <select id="hour" name="hour" required>
+                <option value="" disabled selected>Select hour</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="??">??</option>
+            </select>
+
+            <select id="minutes" name="minutes" required>
+                <option value="00">00</option>
+                <option value="15">15</option>
+                <option value="30">30</option>
+                <option value="45">45</option>
+            </select>
+
+            <label for="customer_address">Address:</label>
+            <input type="text" id="customer_address" name="customer_address" autocomplete="address-line1" required>
+
+
+
+            <label for="contact_phone">Phone:</label>
+            <input type="tel" id="contact_phone" name="contact_phone" required>
+
+
+
+            <div class="centered-container appetizer-section">
+                <div class="appetizer-section">
+                    <h2>~Appetizers~</h2>
+                    <div class="appetizer-grid">
+                        <!-- First Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="guacamole">
+                                Guacamole w/ House Totopos
+                            </label>
+                            <input type="number" id="guacamole-quantity" name="appetizers[Fresh Guacamole w/ House Totopos]" min="1">
+                        </div>
+
+                        <!-- Second Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="chile-queso">
+                                Chile con Queso w/ House Totopos
+                            </label>
+                            <input type="number" id="chile-queso-quantity" name="appetizers[Chile con Queso w/ House Totopos]" min="1">
+                        </div>
+
+                        <!-- Third Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="hongos-al-ajillo">
+                                Hongos al Ajillo
+                            </label>
+                            <input type="number" id="hongos-al-ajillo-quantity" name="appetizers[Hongos al Ajillo]" min="1">
+                        </div>
+
+                        <!-- Fourth Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="encurtidos">
+                                Encurtidos
+                            </label>
+                            <input type="number" id="encurtidos-quantity" name="appetizers[Encurtidos]" min="1">
+                        </div>
+
+                        <!-- Fifth Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="rajas">
+                                Rajas de Chile Poblano
+                            </label>
+                            <input type="number" id="rajas-quantity" name="appetizers[Rajas de Chile Poblano]" min="1">
+                        </div>
+
+                        <!-- Sixth Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="chicken-flautitas">
+                                Chicken Flautitas
+                            </label>
+                            <input type="number" id="chicken-flautitas-quantity" name="appetizers[Chicken Flautitas]" min="1">
+                        </div>
+
+                        <!-- Seventh Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="beef-flautitas">
+                                Beef Flautitas
+                            </label>
+                            <input type="number" id="beef-flautitas-quantity" name="appetizers[Beef Flautitas]" min="1">
+                        </div>
+
+                        <!-- Eighth Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="bean-flautitas">
+                                Bean Flautitas
+                            </label>
+                            <input type="number" id="bean-flautitas-quantity" name="appetizers[Bean Flautitas]" min="1">
+                        </div>
+
+                        <!-- Ninth Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="camarones-mole-amarillo">
+                                Camarones en Mole Amarillo
+                            </label>
+                            <input type="number" id="camarones-mole-amarillo-quantity" name="appetizers[Camarones en Mole Amarillo]" min="1">
+                        </div>
+
+                        <!-- Tenth Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="chips-salsa">
+                                Chips & Salsa
+                            </label>
+                            <input type="number" id="chips-salsa-quantity" name="appetizers[Chips & Salsa]" min="1">
+                        </div>
+
+                        <!-- Eleventh Appetizer -->
+                        <div class="appetizer-item">
+                            <label for="tossed-salad">
+                                Hand Tossed Salad
+                            </label>
+                            <input type="number" id="tossed-salad-quantity" name="appetizers[Hand Tossed Salad]" min="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<div class="centered-container entree-section">
+    <div class="entree-section">
+        <h3>~Entrees~</h3>
+        <div class="entree-grid">
+            <div class="entree-group">
+            <label for="steak-fajitas" class="entree-label">Steak Fajitas</label>
+            <input type="number" id="steak-fajitas-quantity" name="entrees[Steak Fajitas]" min="0" class="entree-input">
+        </div>
+        <div class="entree-group">
+    <label for="chicken-fajitas" class="entree-label">Chicken Fajitas</label>
+    <input type="number" id="chicken-fajitas-quantity" name="entrees[Chicken Fajitas]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="shrimp-fajitas" class="entree-label">Shrimp Fajitas</label>
+    <input type="number" id="shrimp-fajitas-quantity" name="entrees[Shrimp Fajitas]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="vegetable-fajitas" class="entree-label">Vegetable Fajitas</label>
+    <input type="number" id="vegetable-fajitas-quantity" name="entrees[Vegetable Fajitas]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="puntas-nortena" class="entree-label">Puntas a la Norteña</label>
+    <input type="number" id="puntas-nortena-quantity" name="entrees[Puntas a la Norteña]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="mole-pistachio" class="entree-label">Mole de Pistachio</label>
+    <input type="number" id="mole-pistachio-quantity" name="entrees[Mole de Pistachio]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="mole-coloradito" class="entree-label">Mole Coloradito</label>
+    <input type="number" id="mole-coloradito-quantity" name="entrees[Mole Coloradito]" min="0" class="entree-input">
+</div>
+
+<div class="entree-section">
+    <div class="entree-container">
+    <div class="entree-group">
+    <label for="pork-chile-verde" class="entree-label">Pork Chile Verde</label>
+    <input type="number" id="pork-chile-verde-quantity" name="entrees[Pork Chile Verde]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="chicken-chile-verde" class="entree-label">Chicken Chile Verde</label>
+    <input type="number" id="chicken-chile-verde-quantity" name="entrees[Chicken Chile Verde]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="chile-colorado" class="entree-label">Chile Colorado</label>
+    <input type="number" id="chile-colorado-quantity" name="entrees[Chile Colorado]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="succulent-carnitas" class="entree-label">Carnitas</label>
+    <input type="number" id="succulent-carnitas-quantity" name="entrees[Succulent Pork Carnitas]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="pescado-veracruzana" class="entree-label">Pescado a la Veracruzana</label>
+    <input type="number" id="pescado-veracruzana-quantity" name="entrees[Pescado a la Veracruzana]" min="0" class="entree-input">
+</div>
+    <div class="entree-group">
+    <label for="cochinitas" class="entree-label">Cochinitas Pibil</label>
+    <input type="number" id="cochinitas-quantity" name="entrees[Cochinitas Pibil]" min="0" class="entree-input">
+</div>
+</div>
+</div>
+</div>
+  <div class="entree-section">
+    <h3>~Moles~</h3>
+    <div class="mole-container">
+      <div class="mole-row">
+        <div class="mole-group">
+          <label for="mole1" class="entree-label">Mole Flavor</label>
+          <select id="mole1" name="mole-flavor[]" class="entree-input">
+            <option value="" selected disabled>Choose</option>
+            <option value="Mole Amarillo">Amarillo</option>
+            <option value="Mole Poblano">Poblano</option>
+            <option value="Mole Verde">Verde</option>
+            <option value="Mole Negro">Negro</option>
+            <option value="Red Pipian">Red Pipian</option>
+            <option value="Mole Mango">Mango</option>
+          </select>
+        </div>
+
+        <div class="mole-group">
+          <label for="protein1" class="entree-label">Protein Choice</label>
+          <select id="protein1" name="protein-choice[]" class="entree-input">
+            <option value="" selected disabled>Choose</option>
+            <option value="w/ Chicken">Chicken</option>
+            <option value="w/ Vegetable">Vegetable</option>
+            <option value="w/ Turkey">Turkey</option>
+            <option value="w/ Shrimp">Shrimp</option>
+            <option value="w/ Carnitas">Carnitas</option>
+          </select>
+        </div>
+
+        <div class="mole-group">
+          <label for="quantity1" class="entree-label">Quantity</label>
+          <input type="number" id="quantity1" name="mole-quantity[]" min="0" class="entree-input">
+        </div>
+      </div>
+    </div>
+  </div>
+        <div class="mole-container">
+            <div class="mole-row">
+                <div class="mole-group">
+                    <label for="mole2" class="entree-label">Mole Flavor</label>
+                    <select id="mole2" name="mole-flavor[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="Mole Amarillo">Amarillo</option>
+                        <option value="Mole Poblano">Poblano</option>
+                        <option value="Mole Verde">Verde</option>
+                        <option value="Mole Negro">Negro</option>
+                        <option value="Red Pipian">Red Pipian</option>
+                        <option value="Mole Mango">Mango</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="protein2" class="entree-label">Protein Choice</label>
+                    <select id="protein2" name="protein-choice[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="w/ Chicken">Chicken</option>
+                        <option value="w/ Vegetable">Vegetable</option>
+                        <option value="w/ Turkey">Turkey</option>
+                        <option value="w/ Shrimp">Shrimp</option>
+                        <option value="w/ Carnitas">Carnitas</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="quantity2" class="entree-label">Quantity</label>
+                    <input type="number" id="quantity2" name="mole-quantity[]" min="0" class="entree-input">
+                </div>
+            </div>
+        </div>
+        <div class="mole-container">
+            <div class="mole-row">
+                <div class="mole-group">
+                    <label for="mole3" class="entree-label">Mole Flavor</label>
+                    <select id="mole3" name="mole-flavor[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="Mole Amarillo">Amarillo</option>
+                        <option value="Mole Poblano">Poblano</option>
+                        <option value="Mole Verde">Verde</option>
+                        <option value="Mole Negro">Negro</option>
+                        <option value="Red Pipian">Red Pipian</option>
+                        <option value="Mole Mango">Mango</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="protein3" class="entree-label">Protein Choice</label>
+                    <select id="protein3" name="protein-choice[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="w/ Chicken">Chicken</option>
+                        <option value="w/ Vegetable">Vegetable</option>
+                        <option value="w/ Turkey">Turkey</option>
+                        <option value="w/ Shrimp">Shrimp</option>
+                        <option value="w/ Carnitas">Carnitas</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="quantity3" class="entree-label">Quantity</label>
+                    <input type="number" id="quantity3" name="mole-quantity[]" min="0" class="entree-input">
+                </div>
+            </div>
+        </div>
+        <div class="mole-container">
+            <div class="mole-row">
+                <div class="mole-group">
+                    <label for="mole4" class="entree-label">Mole Flavor</label>
+                    <select id="mole4" name="mole-flavor[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="Mole Amarillo">Amarillo</option>
+                        <option value="Mole Poblano">Poblano</option>
+                        <option value="Mole Verde">Verde</option>
+                        <option value="Mole Negro">Negro</option>
+                        <option value="Red Pipian">Red Pipian</option>
+                        <option value="Mole Mango">Mango</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="protein4" class="entree-label">Protein Choice</label>
+                    <select id="protein4" name="protein-choice[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="w/ Chicken">Chicken</option>
+                        <option value="w/ Vegetable">Vegetable</option>
+                        <option value="w/ Turkey">Turkey</option>
+                        <option value="w/ Shrimp">Shrimp</option>
+                        <option value="w/ Carnitas">Carnitas</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="quantity4" class="entree-label">Quantity</label>
+                    <input type="number" id="quantity4" name="mole-quantity[]" min="0" class="entree-input">
+                </div>
+            </div>
+        </div>
+        <div class="mole-container">
+            <div class="mole-row">
+                <div class="mole-group">
+                    <label for="mole5" class="entree-label">Mole Flavor</label>
+                    <select id="mole5" name="mole-flavor[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="Mole Amarillo">Amarillo</option>
+                        <option value="Mole Poblano">Poblano</option>
+                        <option value="Mole Verde">Verde</option>
+                        <option value="Mole Negro">Negro</option>
+                        <option value="Red Pipian">Red Pipian</option>
+                        <option value="Mole Mango">Mango</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="protein5" class="entree-label">Protein Choice</label>
+                    <select id="protein5" name="protein-choice[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="w/ Chicken">Chicken</option>
+                        <option value="w/ Vegetable">Vegetable</option>
+                        <option value="w/ Turkey">Turkey</option>
+                        <option value="w/ Shrimp">Shrimp</option>
+                        <option value="w/ Carnitas">Carnitas</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="quantity5" class="entree-label">Quantity</label>
+                    <input type="number" id="quantity5" name="mole-quantity[]" min="0" class="entree-input">
+                </div>
+            </div>
+        </div>
+        <div class="mole-container">
+            <div class="mole-row">
+                <div class="mole-group">
+                    <label for="mole6" class="entree-label">Mole Flavor</label>
+                    <select id="mole6" name="mole-flavor[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="Mole Amarillo">Amarillo</option>
+                        <option value="Mole Poblano">Poblano</option>
+                        <option value="Mole Verde">Verde</option>
+                        <option value="Mole Negro">Negro</option>
+                        <option value="Red Pipian">Red Pipian</option>
+                        <option value="Mole Mango">Mango</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="protein6" class="entree-label">Protein Choice</label>
+                    <select id="protein6" name="protein-choice[]" class="entree-input">
+                        <option value="" selected disabled>Choose</option>
+                        <option value="w/ Chicken">Chicken</option>
+                        <option value="w/ Vegetable">Vegetable</option>
+                        <option value="w/ Turkey">Turkey</option>
+                        <option value="w/ Shrimp">Shrimp</option>
+                        <option value="w/ Carnitas">Carnitas</option>
+                    </select>
+                </div>
+                <div class="mole-group">
+                    <label for="quantity6" class="entree-label">Quantity</label>
+                    <input type="number" id="quantity6" name="mole-quantity[]" min="0" class="entree-input">
+                </div>
+            </div>
+        </div>
+        <div class="entree-section">
+            <h4>~Specialty Chile Rellenos~</h4>
+            <div class="entree-container">
+              <div class="entree-group">
+                <label for="Chile Relleno Picadillo" class="entree-label">Picadillo</label>
+                <input type="number" id="picadillo-quantity" name="specialty_chile_rellenos[Chile Relleno Picadillo]" min="0" class="entree-input">
+              </div>
+            </div>
+            <div class="entree-container">
+              <div class="entree-group">
+                <label for="Chile Relleno de Camaron" class="entree-label">Camaron</label>
+                <input type="number" id="camaron-quantity" name="specialty_chile_rellenos[Chile Relleno de Camaron]" min="0" class="entree-input">
+              </div>
+            </div>
+            <div class="entree-container">
+              <div class="entree-group">
+                <label for="Chile Relleno Tres Quesos" class="entree-label">Tres Quesos</label>
+                <input type="number" id="tres-quesos-quantity" name="specialty_chile_rellenos[Chile Relleno Tres Quesos]" min="0" class="entree-input">
+              </div>
+            </div>
+            <div class="entree-container">
+              <div class="entree-group">
+                <label for="Chile Relleno Oaxaca" class="entree-label">Oaxaca</label>
+                <input type="number" id="oaxaca-quantity" name="specialty_chile_rellenos[Chile Relleno Oaxaca]" min="0" class="entree-input">
+              </div>
+            </div>
+            <div class="entree-container">
+              <div class="entree-group">
+                <label for="Chile Relleno con Calabaza" class="entree-label">Calabaza</label>
+                <input type="number" id="calabaza-quantity" name="specialty_chile_rellenos[Chile Relleno con Calabaza]" min="0" class="entree-input">
+              </div>
+            </div>
+          </div>
+          <div class="centered-container a-la-carte-section">
+            <div class="a-la-carte-section">
+                <h5>~A la Carte~</h5>
+                <div class="a-la-carte-grid">
+                    <div class="a-la-carte-item">
+                        <label for="trad-chicken">Trad. Chicken</label>
+                        <input type="number" id="trad-chicken-quantity" name="a-la-carte[Traditional Chicken Enchiladas]" min="1">
+                    </div>
+                    <div class="a-la-carte-item">
+                        <label for="trad-beef">Trad. Beef</label>
+                        <input type="number" id="trad-beef-quantity" name="a-la-carte[Traditional Beef Enchiladas]" min="1">
+                    </div>
+                    <div class="a-la-carte-item">
+                        <label for="trad-cheese">Trad. Cheese</label>
+                        <input type="number" id="trad-cheese-quantity" name="a-la-carte[Traditional Cheese Enchiladas]" min="1">
+                    </div>
+                </div>
+                <div class="a-la-carte-grid">
+                    <div class="a-la-carte-item">
+                        <label for="suiza">Suiza</label>
+                        <input type="number" id="suiza-quantity" name="a-la-carte[Specialty Enchiladas Suizas]" min="1">
+                    </div>
+                    <div class="a-la-carte-item">
+                        <label for="verde">Verde</label>
+                        <input type="number" id="verde-quantity" name="a-la-carte[Specialty Enchiladas Verde]" min="1">
+                    </div>
+                    <div class="a-la-carte-item">
+                        <label for="mango">Mango</label>
+                        <input type="number" id="mango-quantity" name="a-la-carte[Specialty Enchiladas Mango]" min="1">
+                    </div>
+                </div>
+                <div class="a-la-carte-grid">
+                    <div class="a-la-carte-item">
+                        <label for="amarillas">Amarillas</label>
+                        <input type="number" id="amarillas-quantity" name="a-la-carte[Specialty Enchiladas Amarillas]" min="1">
+                    </div>
+                    <div class="a-la-carte-item">
+                        <label for="enmoladas">Enmoladas</label>
+                        <input type="number" id="enmoladas-quantity" name="a-la-carte[Enmoladas]" min="1">
+                    </div>
+                    <div class="a-la-carte-item">
+                        <label for="chile-relleno">Chile Relleno</label>
+                        <input type="number" id="chile-relleno-quantity" name="a-la-carte[RI House Chile Rellenos]" min="1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tamales-section">
+            <h6>~Tamales~</h6>
+            <div class="tamales-container">
+                <div class="tamales-row">
+                    <div class="tamales-group">
+                        <label for="protein-choice-0" class="tamales-label">Protein Choice</label>
+                        <select id="protein-choice-0" name="protein-choice[0]" class="tamales-input">
+                            <option value="" selected disabled>Choose</option>
+                            <option value="Chicken">Chicken</option>
+                            <option value="Pork">Pork</option>
+                            <option value="Cheese">Cheese</option>
+                        </select>
+                    </div>
+                    <div class="tamales-group">
+                        <label for="mole-flavor-0" class="tamales-label">Sauce</label>
+                        <select id="mole-flavor-0" name="mole-flavor[0]" class="tamales-input">
+                            <option value="" selected disabled>Choose</option>
+                            <option value="None">None</option>
+                            <option value="w/ Chile Verde">Chile Verde</option>
+                            <option value="w/ Mole Amarillo">Amarillo</option>
+                            <option value="w/ Mole Poblano">Poblano</option>
+                            <option value="w/ Mole Verde">Verde</option>
+                            <option value="w/ Mole Negro">Negro</option>
+                            <option value="W/ Red Pipian">Red Pipian</option>
+                            <option value="w/ Mole Mango">Mango</option>
+                            <option value="w/ Mole Coloradito">Coloradito</option>
+                        </select>
+                    </div>
+                    <div class="tamales-group">
+                        <label for="tamales-quantity-0" class="tamales-label">Quantity</label>
+                        <input type="number" id="tamales-quantity-0" name="tamales-quantity[0]" min="0" class="tamales-input" value="0">
+                    </div>
+                    <div class="tamales-group">
+                        <label class="tamales-label">On Side</label>
+                        <input type="checkbox" name="sauce-on-side[0]" value="on">
+                    </div>
+                </div>
+            </div>
+            <div class="tamales-container">
+                <div class="tamales-row">
+                    <div class="tamales-group">
+                        <label for="protein-choice-1" class="tamales-label">Protein Choice</label>
+                        <select id="protein-choice-1" name="protein-choice[1]" class="tamales-input">
+                            <option value="" selected disabled>Choose</option>
+                            <option value="Chicken">Chicken</option>
+                            <option value="Pork">Pork</option>
+                            <option value="Cheese">Cheese</option>
+                        </select>
+                    </div>
+                    <div class="tamales-group">
+                        <label for="mole-flavor-1" class="tamales-label">Sauce</label>
+                        <select id="mole-flavor-1" name="mole-flavor[1]" class="tamales-input">
+                            <option value="" selected disabled>Choose</option>
+                            <option value="None">None</option>
+                            <option value="w/ Chile Verde">Chile Verde</option>
+                            <option value="w/ Mole Amarillo">Amarillo</option>
+                            <option value="w/ Mole Poblano">Poblano</option>
+                            <option value="w/ Mole Verde">Verde</option>
+                            <option value="w/ Mole Negro">Negro</option>
+                            <option value="W/ Red Pipian">Red Pipian</option>
+                            <option value="w/ Mole Mango">Mango</option>
+                            <option value="w/ Mole Coloradito">Coloradito</option>
+                        </select>
+                    </div>
+                    <div class="tamales-group">
+                        <label for="tamales-quantity-1" class="tamales-label">Quantity</label>
+                        <input type="number" id="tamales-quantity-1" name="tamales-quantity[1]" min="0" class="tamales-input" value="0">
+                    </div>
+                    <div class="tamales-group">
+                        <label class="tamales-label">On Side</label>
+                        <input type="checkbox" name="sauce-on-side[1]" value="on">
+                    </div>
+                </div>
+            </div>
+            <div class="tamales-container">
+                <div class="tamales-row">
+                    <div class="tamales-group">
+                        <label for="protein-choice-2" class="tamales-label">Protein Choice</label>
+                        <select id="protein-choice-2" name="protein-choice[2]" class="tamales-input">
+                            <option value="" selected disabled>Choose</option>
+                            <option value="Chicken">Chicken</option>
+                            <option value="Pork">Pork</option>
+                            <option value="Cheese">Cheese</option>
+                        </select>
+                    </div>
+                    <div class="tamales-group">
+                        <label for="mole-flavor-2" class="tamales-label">Sauce</label>
+                        <select id="mole-flavor-2" name="mole-flavor[2]" class="tamales-input">
+                            <option value="" selected disabled>Choose</option>
+                            <option value="None">None</option>
+                            <option value="w/ Chile Verde">Chile Verde</option>
+                            <option value="w/ Mole Amarillo">Amarillo</option>
+                            <option value="w/ Mole Poblano">Poblano</option>
+                            <option value="w/ Mole Verde">Verde</option>
+                            <option value="w/ Mole Negro">Negro</option>
+                            <option value="W/ Red Pipian">Red Pipian</option>
+                            <option value="w/ Mole Mango">Mango</option>
+                            <option value="w/ Mole Coloradito">Coloradito</option>
+                        </select>
+                    </div>
+                    <div class="tamales-group">
+                        <label for="tamales-quantity-2" class="tamales-label">Quantity</label>
+                        <input type="number" id="tamales-quantity-3" name="tamales-quantity[2]" min="0" class="tamales-input" value="0">
+                    </div>
+                    <div class="tamales-group">
+                        <label class="tamales-label">On Side</label>
+                        <input type="checkbox" name="sauce-on-side[2]" value="on">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dessert-section">
+            <h7>~Desserts~</h7>
+            <div class="dessert-grid">
+                <label for="10-tres-leches">10" Tres Leches</label>
+                <input type="number" id="10-tres-leches-quantity" name="desserts[10&quot; Tres Leches]" min="1">
+
+                <label for="8-tres-leches">8" Tres Leches</label>
+                <input type="number" id="8-tres-leches-quantity" name="desserts[8&quot; Tres Leches]" min="1">
+
+                <label for="10-flan">10" Flan</label>
+                <input type="number" id="10-flan-quantity" name="desserts[10&quot; Flan]" min="1">
+
+                <label for="8-flan">8" Flan</label>
+                <input type="number" id="8-flan-quantity" name="desserts[8&quot; Flan]" min="1">
+
+                <label for="10-chocolate-flan">10" Chocolate Flan</label>
+                <input type="number" id="10-chocolate-flan-quantity" name="desserts[10&quot; Chocolate Flan]" min="1">
+
+                <label for="8-chocolate-flan">8" Chocolate Flan</label>
+                <input type="number" id="8-chocolate-flan-quantity" name="desserts[8&quot; Chocolate Flan]" min="1">
+
+                <label for="cookies">Cookies</label>
+                <input type="number" id="cookies-quantity" name="desserts[Dozen Cookies]" min="1">
+            </div>
+        </div>
+
+
+            <div class="drinks-section">
+                <h7>~Drinks~</h7>
+                <div class="drinks-grid">
+                    <label for="pepsi-products">Assorted Pepsi Products</label>
+                    <input type="number" id="pepsi-products-quantity" name="drinks[Assorted Pepsi Products]" min="1">
+                    <label for="jarritos">Assorted Jarritos</label>
+                    <input type="number" id="jarritos-quantity" name="drinks[Assorted Jarritos]" min="1">
+                    <label for="bottled-water">Voss Bottled Water</label>
+                    <input type="number" id="bottled-water-quantity" name="drinks[Voss Bottled Water]" min="1">
+                    <label for="margarita-mix-pint">Margarita Mix Pints</label>
+                    <input type="number" id="margarita-mix-pint-quantity" name="drinks[Pints Margarita Mix]" min="1">
+                    <label for="margarita-mix-half-gallon">1/2 Gallons Margarita Mix</label>
+                    <input type="number" id="margarita-mix-half-gallon-quantity" name="drinks[1/2 Gallons Margarita Mix]" min="1">
+                    <label for="margarita-mix-gallon">Gallon Margarita Mix</label>
+                    <input type="number" id="margarita-mix-gallon-quantity" name="drinks[Gallons Margarita Mix]" min="1">
+                </div>
+            </div>
+
+
+            <div class="sides-section">
+                <h7>~Sides~</h7>
+                <div class="sides-grid">
+                    <label for="rice-beans">Rice & Beans</label>
+                    <input type="number" id="rice-beans-quantity" name="sides[Spanish Rice & Refried Beans]" min="1">
+                    <label for="chips-salsa">Chips & Salsa</label>
+                    <input type="number" id="chips-salsa-quantity" name="sides[Chips & Salsa]" min="1">
+                    <label for="flour-tortillas">Flour Tortillas</label>
+                    <input type="number" id="flour-tortillas-quantity" name="sides[Flour Tortillas]" min="1">
+                    <label for="corn-tortillas">Corn Tortillas</label>
+                    <input type="number" id="corn-tortillas-quantity" name="sides[Corn Tortillas]" min="1">
+                    <label for="refried-beans">Refried Beans</label>
+                    <input type="number" id="refried-beans-quantity" name="sides[Refried Beans]" min="1">
+                    <label for="spanish-rice">Spanish Rice</label>
+                    <input type="number" id="spanish-rice-quantity" name="sides[Spanish Rice]" min="1">
+                    <label for="black-beans">Black Beans</label>
+                    <input type="number" id="black-beans-quantity" name="sides[Black Beans]" min="1">
+                    <label for="white-rice">White Rice</label>
+                    <input type="number" id="white-rice-quantity" name="sides[White Rice]" min="1">
+
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="pints-quarts-section">
+                <h1>~Pints & Quarts~</h1>
+                <div class="pints-quarts-container">
+                    <div class="pints-quarts-row">
+                        <div class="pints-quarts-group">
+                            <label for="pints-quarts-choice-0" class="pints-label">Pints/Quarts</label>
+                            <select id="pints-quarts-choice-0" name="pints-quarts-choice[0]" class="pints-quarts-input">
+                                <option value="" selected disabled>Choose</option>
+                                <option value="Pints">Pints</option>
+                                <option value="Quarts">Quarts</option>
+                                <option value="1/2 Gallon">1/2 Gallon</option>
+                            </select>
+                        </div>
+                        <div class="pints-quarts-group">
+                            <label for="pints-quarts-mole-flavor-0" class="pints-quarts-label">Sauce</label>
+                            <select id="pints-quarts-mole-flavor-0" name="pints-quarts-mole-flavor[0]" class="pints-quarts-input">
+                                <option value="" selected disabled>Choose</option>
+                                <option value="Salsa">Salsa</option>
+                                <option value="Amarillo">Amarillo</option>
+                                <option value="Poblano">Poblano</option>
+                                <option value="Verde">Verde</option>
+                                <option value="Negro">Negro</option>
+                                <option value="Red Pipian">Red Pipian</option>
+                                <option value="Mango">Mango</option>
+                                <option value="Coloradito">Coloradito</option>
+                            </select>
+                        </div>
+                        <div class="pints-quarts-group">
+                            <label for="pints-quarts-quantity-0" class="pints-quarts-label">Quantity</label>
+                            <input type="number" id="pints-quarts-quantity-0" name="pints-quarts-quantity[0]" min="0" class="pints-quarts-input" >
+                        </div>
+                    </div>
+                    <div class="pints-quarts-container">
+                        <div class="pints-quarts-row">
+                            <div class="pints-quarts-group">
+                                <label for="pints-quarts-choice-1" class="pints-label">Pints/Quarts</label>
+                                <select id="pints-quarts-choice-1" name="pints-quarts-choice[1]" class="pints-quarts-input">
+                                    <option value="" selected disabled>Choose</option>
+                                    <option value="Pints">Pints</option>
+                                    <option value="Quarts">Quarts</option>
+                                    <option value="1/2 Gallon">1/2 Gallon</option>
+                                </select>
+                            </div>
+                            <div class="pints-quarts-group">
+                                <label for="pints-quarts-mole-flavor-1" class="pints-quarts-label">Sauce</label>
+                                <select id="pints-quarts-mole-flavor-1" name="pints-quarts-mole-flavor[1]" class="pints-quarts-input">
+                                    <option value="" selected disabled>Choose</option>
+                                    <option value="Salsa">Salsa</option>
+                                    <option value="Amarillo">Amarillo</option>
+                                    <option value="Poblano">Poblano</option>
+                                    <option value="Verde">Verde</option>
+                                    <option value="Negro">Negro</option>
+                                    <option value="Red Pipian">Red Pipian</option>
+                                    <option value="Mango">Mango</option>
+                                    <option value="Coloradito">Coloradito</option>
+                                </select>
+                            </div>
+                            <div class="pints-quarts-group">
+                                <label for="pints-quarts-quantity-1" class="pints-quarts-label">Quantity</label>
+                               <input type="number" id="pints-quarts-quantity-1" name="pints-quarts-quantity[1]" min="0" class="pints-quarts-input">
+                            </div>
+                        </div>
+                        <div class="pints-quarts-container">
+                            <div class="pints-quarts-row">
+                                <div class="pints-quarts-group">
+                                    <label for="pints-quarts-choice-2" class="pints-label">Pints/Quarts</label>
+                                    <select id="pints-quarts-choice-2" name="pints-quarts-choice[2]" class="pints-quarts-input">
+                                        <option value="" selected disabled>Choose</option>
+                                        <option value="Pints">Pints</option>
+                                        <option value="Quarts">Quarts</option>
+                                        <option value="1/2 Gallon">1/2 Gallon</option>
+                                    </select>
+                                 </div>
+                                <div class="pints-quarts-group">
+                                    <label for="pints-quarts-mole-flavor-2" class="pints-quarts-label">Sauce</label>
+                                    <select id="pints-quarts-mole-flavor-2" name="pints-quarts-mole-flavor[2]" class="pints-quarts-input">
+                                        <option value="" selected disabled>Choose</option>
+                                        <option value="Salsa">Salsa</option>
+                                        <option value="Amarillo">Amarillo</option>
+                                        <option value="Poblano">Poblano</option>
+                                        <option value="Verde">Verde</option>
+                                        <option value="Negro">Negro</option>
+                                        <option value="Red Pipian">Red Pipian</option>
+                                        <option value="Mango">Mango</option>
+                                        <option value="Coloradito">Coloradito</option>
+                                    </select>
+                                </div>
+                                <div class="pints-quarts-group">
+                                    <label for="pints-quarts-quantity-2" class="pints-quarts-label">Quantity</label>
+                                    <input type="number" id="pints-quarts-quantity-2" name="pints-quarts-quantity[2]" min="0" class="pints-quarts-input">
+                                </div>
+                            </div>
+                            <div class="pints-quarts-container">
+                                <div class="pints-quarts-row">
+                                    <div class="pints-quarts-group">
+                                        <label for="pints-quarts-choice-3" class="pints-label">Pints/Quarts</label>
+                                        <select id="pints-quarts-choice-3" name="pints-quarts-choice[3]" class="pints-quarts-input">
+                                            <option value="" selected disabled>Choose</option>
+                                            <option value="Pints">Pints</option>
+                                            <option value="Quarts">Quarts</option>
+                                            <option value="1/2 Gallon">1/2 Gallon</option>
+                                        </select>
+                                    </div>
+                                    <div class="pints-quarts-group">
+                                        <label for="pints-quarts-mole-flavor-3" class="pints-quarts-label">Sauce</label>
+                                        <select id="pints-quarts-mole-flavor-3" name="pints-quarts-mole-flavor[3]" class="pints-quarts-input">
+                                            <option value="" selected disabled>Choose</option>
+                                            <option value="Salsa">Salsa</option>
+                                            <option value="Amarillo">Amarillo</option>
+                                            <option value="Poblano">Poblano</option>
+                                            <option value="Verde">Verde</option>
+                                            <option value="Negro">Negro</option>
+                                            <option value="Red Pipian">Red Pipian</option>
+                                            <option value="Mango">Mango</option>
+                                            <option value="Coloradito">Coloradito</option>
+                                        </select>
+                                    </div>
+                                    <div class="pints-quarts-group">
+                                        <label for="pints-quarts-quantity-3" class="pints-quarts-label">Quantity</label>
+                                        <input type="number" id="pints-quarts-quantity-3" name="pints-quarts-quantity[3]" min="0" class="pints-quarts-input">
+                                    </div>
+                                </div>
+                                <div class="pints-quarts-container">
+                                    <div class="pints-quarts-row">
+                                        <div class="pints-quarts-group">
+                                            <label for="pints-quarts-choice-4" class="pints-label">Pints/Quarts</label>
+                                            <select id="pints-quarts-choice-4" name="pints-quarts-choice[4]" class="pints-quarts-input">
+                                                <option value="" selected disabled>Choose</option>
+                                                <option value="Pints">Pints</option>
+                                                <option value="Quarts">Quarts</option>
+                                                <option value="1/2 Gallon">1/2 Gallon</option>
+                                            </select>
+                                        </div>
+                                        <div class="pints-quarts-group">
+                                            <label for="pints-quarts-mole-flavor-4" class="pints-quarts-label">Sauce</label>
+                                            <select id="pints-quarts-mole-flavor-4" name="pints-quarts-mole-flavor[4]" class="pints-quarts-input">
+                                                <option value="" selected disabled>Choose</option>
+                                                <option value="Salsa">Salsa</option>
+                                                <option value="Amarillo">Amarillo</option>
+                                                <option value="Poblano">Poblano</option>
+                                                <option value="Verde">Verde</option>
+                                                <option value="Negro">Negro</option>
+                                                <option value="Red Pipian">Red Pipian</option>
+                                                <option value="Mango">Mango</option>
+                                                <option value="Coloradito">Coloradito</option>
+                                            </select>
+                                        </div>
+                                        <div class="pints-quarts-group">
+                                            <label for="pints-quarts-quantity-4" class="pints-quarts-label">Quantity</label>
+                                            <input type="number" id="pints-quarts-quantity-4" name="pints-quarts-quantity[4]" min="0" class="pints-quarts-input">
+                                        </div>
+                                    </div>
+                                    <div class="pints-quarts-container">
+                                        <div class="pints-quarts-row">
+                                            <div class="pints-quarts-group">
+                                                <label for="pints-quarts-choice-5" class="pints-label">Pints/Quarts</label>
+                                                <select id="pints-quarts-choice-5" name="pints-quarts-choice[5]" class="pints-quarts-input">
+                                                    <option value="" selected disabled>Choose</option>
+                                                    <option value="Pints">Pints</option>
+                                                    <option value="Quarts">Quarts</option>
+                                                    <option value="1/2 Gallon">1/2 Gallon</option>
+                                                </select>
+                                            </div>
+                                            <div class="pints-quarts-group">
+                                                <label for="pints-quarts-mole-flavor-5" class="pints-quarts-label">Sauce</label>
+                                                <select id="pints-quarts-mole-flavor-5" name="pints-quarts-mole-flavor[5]" class="pints-quarts-input">
+                                                    <option value="" selected disabled>Choose</option>
+                                                    <option value="Salsa">Salsa</option>
+                                                    <option value="Amarillo">Amarillo</option>
+                                                    <option value="Poblano">Poblano</option>
+                                                    <option value="Verde">Verde</option>
+                                                    <option value="Negro">Negro</option>
+                                                    <option value="Red Pipian">Red Pipian</option>
+                                                    <option value="Mango">Mango</option>
+                                                    <option value="Coloradito">Coloradito</option>
+                                                </select>
+                                            </div>
+                                            <div class="pints-quarts-group">
+                                                <label for="pints-quarts-quantity-5" class="pints-quarts-label">Quantity</label>
+                                                <input type="number" id="pints-quarts-quantity-5" name="pints-quarts-quantity[5]" min="0" class="pints-quarts-input">
+                                            </div>
+                                        </div>
+                                        <div class="pints-quarts-container">
+                                            <div class="pints-quarts-row">
+                                                <div class="pints-quarts-group">
+                                                    <label for="pints-quarts-choice-6" class="pints-label">Pints/Quarts</label>
+                                                    <select id="pints-quarts-choice-6" name="pints-quarts-choice[6]" class="pints-quarts-input">
+                                                        <option value="" selected disabled>Choose</option>
+                                                        <option value="Pints">Pints</option>
+                                                        <option value="Quarts">Quarts</option>
+                                                        <option value="1/2 Gallon">1/2 Gallon</option>
+                                                    </select>
+                                                </div>
+                                                <div class="pints-quarts-group">
+                                                    <label for="pints-quarts-mole-flavor-6" class="pints-quarts-label">Sauce</label>
+                                                    <select id="pints-quarts-mole-flavor-6" name="pints-quarts-mole-flavor[6]" class="pints-quarts-input">
+                                                        <option value="" selected disabled>Choose</option>
+                                                        <option value="Salsa">Salsa</option>
+                                                        <option value="Amarillo">Amarillo</option>
+                                                        <option value="Poblano">Poblano</option>
+                                                        <option value="Verde">Verde</option>
+                                                        <option value="Negro">Negro</option>
+                                                        <option value="Red Pipian">Red Pipian</option>
+                                                        <option value="Mango">Mango</option>
+                                                        <option value="Coloradito">Coloradito</option>
+                                                    </select>
+                                                </div>
+                                                <div class="pints-quarts-group">
+                                                    <label for="pints-quarts-quantity-6" class="pints-quarts-label">Quantity</label>
+                                                    <input type="number" id="pints-quarts-quantity-6" name="pints-quarts-quantity[6]" min="0" class="pints-quarts-input">
+                                                </div>
+                                            </div>
+
+
+
+                                            <h2>~Chafers~</h2>
+                                            <div class="chafer-container">
+                                                <div class="chafer-group">
+                                                    <label for="chafers-quantity">Chafers</label>
+                                                    <input type="number" id="chafers-quantity" name="chafers[Chafers]" placeholder="" min="1">
+                                                </div>
+
+                                                <div class="chafer-group">
+                                                    <label for="half-chafers-quantity">1/2 Chafer</label>
+                                                    <input type="number" id="half-chafers-quantity" name="chafers[1/2 Chafers]" placeholder="" min="1">
+                                                </div>
+                                            </div>
+                </div>
+
+            </div>
+            <div class="extra-charges">
+                <!-- Tax Exempt -->
+                <div class="checkbox">
+                    <label for="tax_exempt">Tax Exempt:</label>
+                    <input type="checkbox" id="tax_exempt" name="tax_exempt">
+                </div>
+
+            <div class="extra-charges">
+                <div class="checkbox">
+                    <label for="packaging_handling_fee">Packaging & Handling Fee %:</label>
+                    <input type="number" id="packaging_handling_fee" name="packaging_handling_fee" min="0" step="1" style="width: 90px;" placeholder="Enter %">
+                </div>
+                <div class="input">
+                    <label for="gratuity">Gratuity %:</label>
+                    <input type="number" id="gratuity" name="gratuity" min="0" step="1" style="width: 90px;" placeholder="Enter %" />
+                </div>
+                </div>
+
+            </div>
+    <button type="submit">Submit Order</button>
+
+</form>
+<div id="orderSummary"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,534 @@
+/* styles.css */
+
+body {
+  background-color: #333;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+}
+
+nav {
+  color: #000;
+  background-color: #000;
+  padding: 10px;
+}
+
+nav ul {
+  background-color: #333;
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 10px;
+  font-family: Arial, sans-serif; /* Change the font family */
+  color: #f8f1f1; /* Change the font color */
+  font-size: 20px; /* Change the font size */
+}
+
+nav ul li a {
+  text-decoration: none;
+  font-family: Arial, sans-serif; /* Change the font family */
+  color: #f8f1f1; /* Change the font color */
+  font-size: 20px; /* Change the font size */
+}
+
+main {
+  background-color: #000;
+  padding: 20px;
+}
+
+section {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+section img {
+  width: 100%;
+  height: auto;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+section {
+  display: grid;
+  place-items: center;
+}
+
+section img {
+width:300px; /* Set the desired width */
+height: auto; /* Maintain the aspect ratio */
+}
+.navbar li.nav-item a {
+  background-color: black;
+  color: white;
+}
+
+.navbar li.nav-item a:hover {
+  background-color: #111;
+}
+.menu-item {
+  font-size: 40px;
+  margin-bottom: 5px;
+}
+.centered-container {
+  display: flex;
+  justify-content: center;
+}
+
+.centered-container h2 {
+  font-size: 30px; /* Font size */
+  font-weight: bold; /* Bold font */
+}
+
+/* Center the text within the form */
+form {
+  text-align: center;
+}
+      .contact-label-large {
+       font-size: 30px;
+}
+
+      .contact-heading {
+      font-size: 24px;
+}
+
+      .contact-label {
+       font-size: 25px;
+}
+
+      .contact-input {
+      font-size: 25px;
+}
+
+.centered-container .appetizer-section h2 {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+
+     /* Margin between contact information and appetizers */
+.appetizer-section {
+  width: 75%;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  flex-wrap: wrap; /* Allow items to wrap to the next line if there's not enough space */
+}
+
+/* Increase spacing between rows */
+.appetizer-grid {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line if there's not enough space */
+  gap: 20px; /* Add some spacing between rows */
+  justify-content: center; /* Horizontally center items within the container */
+}
+
+/* Smaller number entry boxes */
+.appetizer-grid input[type="number"] {
+  width: 60px;
+  font-size: 20px; /* Adjust the font size for number inputs */
+}
+
+/* Adjust text size for appetizer items */
+.appetizer-grid label {
+  font-size: 25px;
+}
+.entree-section h4 {
+  font-size: 30px; /* Font size */
+  font-weight: bold; /* Bold font */
+}
+.centered-container .entree-section h3 {
+  font-size: 30px;
+}
+
+
+  /* Margin between contact information and entrees */
+  .entree-section {
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+  }
+
+
+  /* Smaller text box size for entrees */
+  .entree-input {
+      width: 90px;
+  }
+  .entree-grid {
+      width: 75%;
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+  }
+
+
+      .entree-group label {
+          display: block;
+          font-size: 25px;
+
+      }
+
+      .entree-group input {
+          width: 90px;
+          font-size: 20px;
+      }
+
+  .mole-group {
+      font-size: 20px;
+  }
+  .mole-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+
+  }
+  .mole-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+  }
+  .a-la-carte-section h5 {
+    font-size: 30px; /* Adjust the font size to your preference */
+    font-weight: bold; /* Bold font */
+  }
+
+/* Increase spacing between rows */
+.a-la-carte-section {
+  width: 75%;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.a-la-carte-grid {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line if there's not enough space */
+  gap: 20px; /* Add some spacing between rows */
+  justify-content: center; /* Horizontally center items within the container */
+  margin-bottom: 10px; /* Add margin between rows */
+}
+
+/* Smaller number entry boxes */
+.a-la-carte-grid input[type="number"] {
+  width: 60px;
+  font-size: 20px; /* Adjust the font size for number inputs */
+}
+
+/* Adjust text size for a la carte items */
+.a-la-carte-grid label {
+  font-size: 25px;
+}
+
+.tamales-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.tamales-section h6 {
+  font-size: 30px; /* Adjust the font size to your preference */
+  font-weight: bold; /* Bold font */
+}
+
+.tamales-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  font-size: 20px;
+}
+
+.tamales-row input[type="number"] {
+  width: 70px;
+  font-size: 20px;
+}
+
+.dessert-section h7 {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+   /* Increase spacing between rows */
+   .dessert-grid label, {
+          font-size: 25px;
+      }
+      /* Smaller number entry boxes */
+      .dessert-grid input[type="number"] {
+          width: 60px;
+          margin-bottom: 20px;
+          font-size: 20px;
+      }
+
+      /* Adjust text size for appetizer items */
+      .desssert-grid label {
+          font-size: 25px;
+      }
+      .dessert-section {
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      font-size: 20px;
+  }
+   /* Increase spacing between rows */
+   .drinks-grid label, {
+          font-size: 25px;
+      }
+      /* Smaller number entry boxes */
+      .drinks-grid input[type="number"] {
+          width: 60px;
+          margin-bottom: 20px;
+          font-size: 20px;
+      }
+      .drinks-section h7 {
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+      /* Adjust text size for appetizer items */
+      .drinks-grid label {
+          font-size: 25px;
+      }
+      .drinks-section {
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      font-size: 20px;
+  }
+
+  .sides-section {
+    flex-wrap: wrap;
+    justify-content: space-between; /* Adjust alignment as needed */
+    margin-top: 30px;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+
+  .sides-grid input[type="number"] {
+    width: 60px;
+    font-size: 20px;
+    margin-top: 5px; /* Add spacing between items if desired */
+  }
+  .sides-section h7 {
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+
+/* Center the entire section */
+.pints-quarts-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Optional styling for individual elements (you can customize this further) */
+.pints-quarts-container {
+  display: inline-block;
+  margin-bottom: 10px; /* Optional spacing between containers */
+  font-size: 20px;
+}
+
+.pints-quarts-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px; /* Optional spacing between rows */
+  font-size: 20px;
+}
+
+.pints-quarts-group {
+  margin-right: 10px; /* Optional spacing between groups */
+  display: inline-block;
+  font-size: 20px;
+}
+
+.pints-quarts-input {
+  width: 90px;
+}
+
+.pints-quarts-section h1 {
+  font-size: 30px; /* Adjust the value as needed */
+}
+
+
+.chafer-container {
+      display: flex; /* Display the chafer groups side by side */
+      justify-content: center; /* Center them horizontally */
+      align-items: center; /* Align items vertically in the middle */
+      margin-bottom: 15px;
+  }
+
+  .chafer-group {
+      margin-right: 20px; /* Add spacing between chafers */
+  }
+
+  .chafer-group label {
+      font-weight: bold;
+      display: block; /* This ensures proper vertical alignment */
+  }
+
+  .chafer-group input[type="number"] {
+      width: 70px; /* Adjust the width as needed */
+      padding: 7px;
+      font-size: 16px; /* Adjust the font size as needed */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+  }
+
+
+/* Center the checkboxes horizontally within their container */
+.checkboxes {
+  display: flex;
+  justify-content: center; /* Horizontally center the checkboxes */
+  margin-bottom: 30px;
+}
+
+.checkbox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.checkbox label {
+  font-size: 25px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+
+.checkbox input[type="checkbox"] {
+  width: 30px;
+  height: 30px;
+}
+
+/* Center the checkboxes horizontally within their container */
+.checkboxes {
+  display: flex;
+  justify-content: center; /* Horizontally center the checkboxes */
+  margin-bottom: 30px;
+}
+
+/* Center the "Serving" label and input horizontally within their container */
+.serving-container {
+  display: flex;
+  justify-content: center; /* Horizontally center the label and input */
+  align-items: center; /* Vertically center the label and input */
+  margin-bottom: 30px;
+}
+
+/* Target the dropdown options and set the font size */
+#pickup_location option {
+  font-size: 20px; /* Adjust the font size as needed */
+}
+
+
+/* Style the "Serving" input box */
+#serving_for {
+  width: 50px; /* Adjust the width as needed */
+  height: 30px;
+
+  label font-size: 300px;
+  font-weight: bold;
+}
+
+/* Target the labels and inputs and set the font size */
+label[for="customer_name"],
+label[for="date"],
+label[for="time"],
+label[for="customer_address"],
+label[for="contact_phone"],
+#hour,
+#minutes,
+#customer_name,
+#date,
+#time,
+#customer_address,
+#contact_phone {
+  font-size: 15px; /* Adjust the font size as needed */
+}
+
+
+/* Style for the entire row of checkboxes and inputs */
+.extra-charges {
+  display: flex;
+  flex-wrap: wrap; /* Allow elements to wrap to the next line */
+  justify-content: center; /* Horizontally center the row */
+  align-items: center; /* Vertically center the row */
+}
+
+/* Style for each checkbox and its label */
+.extra-charges .checkbox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
+  margin-bottom: 30px; /* Spacing between checkboxes */
+}
+
+/* Style for checkbox labels */
+.extra-charges .checkbox label {
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+/* Style for checkboxes */
+.extra-charges .checkbox input[type="checkbox"] {
+  width: 30px;
+  height: 30px;
+  /* You can further customize checkbox styles here */
+}
+
+/* Style for input fields */
+.extra-charges .input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
+  margin-bottom: 30px; /* Spacing between inputs */
+}
+
+/* Style for input labels */
+.extra-charges .input label {
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+/* Style for input fields */
+.extra-charges .input input[type="text"] {
+  width: 100px; /* Adjust the width as needed */
+  height: 30px;
+  /* You can further customize input field styles here */
+}
+
+.gratuity {
+  margin-top: 10px; /* Adjust the margin as needed */
+  font-weight: bold; /* Make the text bold or adjust styling as desired */
+
+}
